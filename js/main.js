@@ -1,34 +1,47 @@
-currentTurn = null;
-BOARD_SIZE = 8;
-BLACK = 0;
-WHITE = 1;
+var currentTurn = null;
+var mainDiv = null;
+var cells = [];
+let BOARD_SIZE = 8;
+let BLANK = 0;
+let WHITE = 1;
+let BLACK = 2;
 
 function init(divId) {
-    mainDiv = document.getElementById(divId);
-    //mainDiv.innerHTML = "hi from init";
-    makeBoard();
-    initGame();
-}
+     mainDiv = document.getElementById(divId);
+     makeBoard();
+     initGame();
+ }
 
 function makeBoard() {
     var boardTable = document.createElement('table');
-    for (var i=0; i<=BOARD_SIZE; i++) {
+    for (var i=0; i<BOARD_SIZE; i++) {
         tr = document.createElement('tr');
-        boardTable.appendChild(tr);
-        for (var j=0; j<=BOARD_SIZE; j++) {
+        cells[i] = [];
+        for (var j=0; j<BOARD_SIZE; j++) {
             td = document.createElement('td');
+            cells[i][j] = {elem: td};
             bindCellClick(i, j, td);
+            setSpot(i, j, BLANK)
             tr.appendChild(td);
         }
+        boardTable.appendChild(tr);
+    }
+    mainDiv.appendChild(boardTable);
+}
+
+function bindCellClick(i, j, td) {
+    td.onclick = function(event) {
+        setSpot(i, j, currentTurn);
+        currentTurn = currentTurn % 2 + 1;
     }
 }
 
 function initGame() {
-    setTurn(0);
-    setSpot(boardSize/2-1, boardSize/2-1, BLACK);
-    setSpot(boardSize/2-1, boardSize/2, WHITE);
-    setSpot(boardSize/2, boardSize/2-1, BLACK);
-    setSpot(boardSize/2, boardSize/2, WHITE);
+    setTurn(WHITE);
+    setSpot(BOARD_SIZE/2-1, BOARD_SIZE/2-1, WHITE);
+    setSpot(BOARD_SIZE/2-1, BOARD_SIZE/2, BLACK);
+    setSpot(BOARD_SIZE/2, BOARD_SIZE/2-1, BLACK);
+    setSpot(BOARD_SIZE/2, BOARD_SIZE/2, WHITE);
     setScore(2, 2);
 }
 
@@ -37,9 +50,10 @@ function setTurn(turn) {
 }
 
 function setScore(blackCount, whiteCount) {
-
+    // TODO: Implement
 }
 
-function setSpot(row, col, color) {
-
+function setSpot(i, j, color) {
+    cells[i][j].elem.innerHTML = color;
+    cells[i][j].value = color;
 }
