@@ -1,0 +1,35 @@
+h1 {
+    font-family: Verdana;
+}
+
+.color_1 {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.color_2 {
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+td {
+    border: 1px solid black;
+    width: 50px;
+    height: 50px;
+}
+
+table {
+    background-color: green;
+    width: 50%;
+    height: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}

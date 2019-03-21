@@ -78,7 +78,8 @@ function makeMove(i, j, color) {
 
 function setSpot(i, j, color) {
     updateScore(cells[i][j].value, color);
-    cells[i][j].elem.innerHTML = color;
+    cells[i][j].elem.innerHTML = "<span id=\"" + color + "\" class=\"color_" + color + "\">";
+    // cells[i][j].elem.className = "color_" + color;
     cells[i][j].value = color;
 }
 
