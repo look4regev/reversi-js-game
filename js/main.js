@@ -79,8 +79,10 @@ function makeMove(i, j, color) {
 function setSpot(i, j, color) {
     updateScore(cells[i][j].value, color);
     cells[i][j].elem.innerHTML = "<span id=\"" + color + "\" class=\"color_" + color + "\">";
-    // cells[i][j].elem.className = "color_" + color;
     cells[i][j].value = color;
+    if (cells[i][j].value !== BLANK) {
+        cells[i][j].elem.className = "clicked";
+    }
 }
 
 function isSpotColor(i, j, color) {
