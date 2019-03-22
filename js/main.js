@@ -49,8 +49,42 @@ function bindCellClick(i, j, td) {
         is_changed = makeMove(i, j, currentTurnColor);
         if (is_changed) {
             currentTurnColor = switchColor(currentTurnColor);
+            if (isOneColorScoreZeroed() || isBoardFull()) {
+                showWinner();
+            }
         }
     }
+}
+
+function showWinner() {
+    winnerElement = document.createElement('p');
+    text = "End of game! The winner is ";
+    if (score[WHITE].value > score[BLACK].value) {
+        winnerElement.innerHTML = text + "White!"
+    } else {
+        if (score[WHITE].value < score[BLACK].value) {
+            winnerElement.innerHTML = text + "Black!"
+        } else {
+            winnerElement.innerHTML = text + "Both! It's a tie!"
+        }
+    }
+    mainDiv.appendChild(winnerElement);
+}
+
+function isOneColorScoreZeroed() {
+    return (score[WHITE].value == 0 && score[BLACK].value > 0) ||
+           (score[WHITE].value > 0 && score[BLACK].value == 0);
+}
+
+function isBoardFull() {
+    for (var i=0; i<BOARD_SIZE; i++) {
+        for (var j=0; j<BOARD_SIZE; j++) {
+            if (cells[i][j].value === BLANK) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 function initGame() {
