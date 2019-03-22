@@ -2,16 +2,18 @@ let BLANK = 0;
 let WHITE = 1;
 let BLACK = 2;
 let BOARD_SIZE = 8;
+let SCORE_COLOR_TO_TEXT = ["", "White: ", "Black: "];
 
 var currentTurnColor = null;
 var mainDiv = null;
 var cells = [];
-var score = [0, 0];
+var score = [{}, {value: 0}, {value: 0}];
 
 function init(divId) {
-     mainDiv = document.getElementById(divId);
-     makeBoard();
-     initGame();
+    mainDiv = document.getElementById(divId);
+    makeScoreCard(); 
+    makeBoard();
+    initGame();
 }
 
 function makeBoard() {
@@ -29,6 +31,17 @@ function makeBoard() {
         boardTable.appendChild(tr);
     }
     mainDiv.appendChild(boardTable);
+}
+
+function makeScoreCard() {
+    var scoreCard = document.createElement('p');
+
+    score[WHITE].elem = document.createElement('span');
+    score[BLACK].elem = document.createElement('span');
+
+    scoreCard.appendChild(score[WHITE].elem);
+    scoreCard.appendChild(score[BLACK].elem);
+    mainDiv.appendChild(scoreCard);
 }
 
 function bindCellClick(i, j, td) {
@@ -56,10 +69,18 @@ function switchColor(color) {
     return color % 2 + 1;
 }
 
-function updateScore(old_color, new_color) {
-    score[new_color-1]++;
-    if (old_color != BLANK) {
-        score[old_color-1]--;
+function invalidateScore(color) {
+    score[color].elem.innerHTML = SCORE_COLOR_TO_TEXT[color] + score[color].value + " &nbsp; ";
+}
+
+function updateScore(oldColor, newColor) {
+    if (newColor != BLANK) {
+        score[newColor].value++;
+        invalidateScore(newColor);
+    }
+    if (typeof oldColor !== "undefined" && oldColor != BLANK) {
+        score[oldColor].value--;
+        invalidateScore(oldColor);
     }
 }
 

@@ -38,6 +38,11 @@ button {
     cursor: default;
 }
 
+p {
+    font-family: Verdana;
+    text-align: center;
+}
+
 td {
     border: 1px solid black;
     width: 50px;
