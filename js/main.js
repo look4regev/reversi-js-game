@@ -10,6 +10,7 @@ var cells = [];
 var score = [{}, {value: 0}, {value: 0}];
 var timers = [{ turns: 0, time: 0, timerFunc: increaseTimeForWhite, timerHandle: null, timerDiv: null},
     {turns: 0, time: 0, timerFunc: increaseTimeForBlack, timerHandle: null, timerDiv: null}];
+var gameInterval = null;
 
 function init(divId) {
     mainDiv = document.getElementById(divId);
@@ -55,7 +56,7 @@ function makeStatisticsCard() {
     timer.innerText = 'Elapsed Time: 0';
     timer.className = 'inner_statistics';
     statisticsCard.appendChild(timer);
-    setInterval(increaseTime, 1000);
+    gameInterval = setInterval(increaseTime, 1000);
 
     movesCounter = document.createElement('span');
     movesCounter.innerText = 'Total Moves: 0';
@@ -91,7 +92,6 @@ function increaseTimeForBlack() {
 
 function increaseTimeForColor(color) {
     timers[color - 1].time++;
-    console.log('timing ', color);
 }
 
 function clearTimer(color) {
@@ -112,8 +112,8 @@ function bindCellClick(i, j, td) {
             clearTimer(currentTurnColor);
             currentTurnColor = switchColor(currentTurnColor);
             setTimer(currentTurnColor);
-            markMove(currentTurnColor);
-            if (isOneColorScoreZeroed() || isBoardFull()) {
+            movesMarkedCount = markMove(currentTurnColor);
+            if (isOneColorScoreZeroed() || isBoardFull() || movesMarkedCount === 0) {
                 showWinner();
             }
         }
@@ -133,6 +133,7 @@ function showWinner() {
         }
     }
     mainDiv.appendChild(winnerElement);
+    clearInterval(gameInterval);
 }
 
 function isOneColorScoreZeroed() {
@@ -198,17 +199,20 @@ function makeMove(i, j, color) {
 }
 
 function markMove(color) {
+    var movesMarkedCount = 0;
     for (let i = 0; i < BOARD_SIZE; i++) {
         for (let j = 0; j < BOARD_SIZE; j++) {
             if (isSpotColor(i, j, BLANK)) {
                 if (getCellsToChangeByMove(i, j, color).length > 0) {
                     cells[i][j].elem.className = "clickable_" + color;
+                    movesMarkedCount++;
                 } else if (cells[i][j].elem.className.startsWith("clickable_")) {
                     cells[i][j].elem.className = '';
                 }
             }
         }
     }
+    return movesMarkedCount;
 }
 
 function setSpot(i, j, color) {
