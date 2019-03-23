@@ -1,17 +1,18 @@
-h1 {
-    font-family: Verdana;
+.statistics {
+    text-align: center;
+    align: center;
+    margin: auto;
+    padding: 10px;
+    width: 50%;
 }
 
-button {
+.inner_statistics {
     font-family: Verdana;
-    font-size: 1.3em;
-    color: white;
-    background-image: -webkit-linear-gradient(top, grey, dimgrey);
-    padding: 10px 20px;
-    border-radius: 5px;
-    display: block;
-    margin: 10px auto 0px auto;
-    cursor: pointer;
+    text-align: center;
+    align: center;
+    margin: auto;
+    padding: 10px;
+    width: 50%;
 }
 
 .clickable_1 {
@@ -42,6 +43,22 @@ button {
     display: inline-block;
     vertical-align: bottom;
     cursor: default;
+}
+
+h1 {
+    font-family: Verdana;
+}
+
+button {
+    font-family: Verdana;
+    font-size: 1.3em;
+    color: white;
+    background-image: -webkit-linear-gradient(top, grey, dimgrey);
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: block;
+    margin: 10px auto 0px auto;
+    cursor: pointer;
 }
 
 p {

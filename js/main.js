@@ -8,20 +8,23 @@ var currentTurnColor = null;
 var mainDiv = null;
 var cells = [];
 var score = [{}, {value: 0}, {value: 0}];
+var timers = [{ turns: 0, time: 0, timerFunc: increaseTimeForWhite, timerHandle: null, timerDiv: null},
+    {turns: 0, time: 0, timerFunc: increaseTimeForBlack, timerHandle: null, timerDiv: null}];
 
 function init(divId) {
     mainDiv = document.getElementById(divId);
-    makeScoreCard(); 
+    makeScoreCard();
+    makeStatisticsCard();
     makeBoard();
     initGame();
 }
 
 function makeBoard() {
-    var boardTable = document.createElement('table');
-    for (var i=0; i<BOARD_SIZE; i++) {
+    let boardTable = document.createElement('table');
+    for (let i=0; i<BOARD_SIZE; i++) {
         tr = document.createElement('tr');
         cells[i] = [];
-        for (var j=0; j<BOARD_SIZE; j++) {
+        for (let j=0; j<BOARD_SIZE; j++) {
             td = document.createElement('td');
             cells[i][j] = {elem: td};
             bindCellClick(i, j, td);
@@ -34,7 +37,7 @@ function makeBoard() {
 }
 
 function makeScoreCard() {
-    var scoreCard = document.createElement('p');
+    let scoreCard = document.createElement('p');
 
     score[WHITE].elem = document.createElement('span');
     score[BLACK].elem = document.createElement('span');
@@ -44,11 +47,71 @@ function makeScoreCard() {
     mainDiv.appendChild(scoreCard);
 }
 
+function makeStatisticsCard() {
+    let statisticsCard = document.createElement('div');
+    statisticsCard.className = 'statistics';
+
+    timer = document.createElement('span');
+    timer.innerText = 'Elapsed Time: 0';
+    timer.className = 'inner_statistics';
+    statisticsCard.appendChild(timer);
+    setInterval(increaseTime, 1000);
+
+    movesCounter = document.createElement('span');
+    movesCounter.innerText = 'Total Moves: 0';
+    movesCounter.className = 'inner_statistics';
+    statisticsCard.appendChild(movesCounter);
+
+    let avgWhiteTimer = document.createElement('span');
+    avgWhiteTimer.innerText = 'White Avg Time: 0s';
+    avgWhiteTimer.className = 'inner_statistics';
+    timers[WHITE - 1].timerDiv = avgWhiteTimer;
+    statisticsCard.appendChild(avgWhiteTimer);
+
+    let avgBlackTimer = document.createElement('span');
+    avgBlackTimer.innerText = 'Black Avg Time: 0s';
+    avgBlackTimer.className = 'inner_statistics';
+    timers[BLACK - 1].timerDiv = avgBlackTimer;
+    statisticsCard.appendChild(avgBlackTimer);
+
+    mainDiv.appendChild(statisticsCard);
+}
+
+function increaseTime() {
+    timer.innerText = timer.innerText.split(':')[0] + ': ' + (parseInt(timer.innerText.split(':')[1]) + 1);
+}
+
+function increaseTimeForWhite() {
+    increaseTimeForColor(WHITE);
+}
+
+function increaseTimeForBlack() {
+    increaseTimeForColor(BLACK);
+}
+
+function increaseTimeForColor(color) {
+    timers[color - 1].time++;
+    console.log('timing ', color);
+}
+
+function clearTimer(color) {
+    clearInterval(timers[color - 1].timerHandle);
+    timers[color - 1].turns++;
+    timers[color - 1].timerDiv.innerText = timers[color - 1].timerDiv.innerText.split(':')[0] + ': ' + (timers[color - 1].time / timers[color - 1].turns) + 's';
+}
+
+function setTimer(color) {
+    timers[color - 1].timerHandle = setInterval(timers[color - 1].timerFunc, 1000);
+}
+
 function bindCellClick(i, j, td) {
     td.onclick = function(event) {
         is_changed = makeMove(i, j, currentTurnColor);
         if (is_changed) {
+            movesCounter.innerText = movesCounter.innerText.split(':')[0] + ': ' + (parseInt(movesCounter.innerText.split(':')[1]) + 1);
+            clearTimer(currentTurnColor);
             currentTurnColor = switchColor(currentTurnColor);
+            setTimer(currentTurnColor);
             markMove(currentTurnColor);
             if (isOneColorScoreZeroed() || isBoardFull()) {
                 showWinner();
@@ -78,8 +141,8 @@ function isOneColorScoreZeroed() {
 }
 
 function isBoardFull() {
-    for (var i=0; i<BOARD_SIZE; i++) {
-        for (var j=0; j<BOARD_SIZE; j++) {
+    for (let i=0; i<BOARD_SIZE; i++) {
+        for (let j=0; j<BOARD_SIZE; j++) {
             if (cells[i][j].value === BLANK) {
                 return false;
             }
@@ -95,6 +158,7 @@ function initGame() {
     setSpot(BOARD_SIZE/2, BOARD_SIZE/2-1, BLACK);
     setSpot(BOARD_SIZE/2, BOARD_SIZE/2, WHITE);
     markMove(WHITE);
+    timers[WHITE - 1].timerHandle = setInterval(timers[WHITE - 1].timerFunc, 1000);
 }
 
 function setTurn(color) {
