@@ -1,7 +1,7 @@
 let BLANK = 0;
 let WHITE = 1;
 let BLACK = 2;
-let BOARD_SIZE = 8;
+let BOARD_SIZE = 10;
 let SCORE_COLOR_TO_TEXT = ["", "White: ", "Black: "];
 
 var currentTurnColor = null;
