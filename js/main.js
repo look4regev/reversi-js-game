@@ -97,7 +97,7 @@ function increaseTimeForColor(color) {
 function clearTimer(color) {
     clearInterval(timers[color - 1].timerHandle);
     timers[color - 1].turns++;
-    timers[color - 1].timerDiv.innerText = timers[color - 1].timerDiv.innerText.split(':')[0] + ': ' + (timers[color - 1].time / timers[color - 1].turns) + 's';
+    timers[color - 1].timerDiv.innerText = timers[color - 1].timerDiv.innerText.split(':')[0] + ': ' + Math.round(timers[color - 1].time / timers[color - 1].turns) + 's';
 }
 
 function setTimer(color) {
