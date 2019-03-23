@@ -49,6 +49,7 @@ function bindCellClick(i, j, td) {
         is_changed = makeMove(i, j, currentTurnColor);
         if (is_changed) {
             currentTurnColor = switchColor(currentTurnColor);
+            markMove(currentTurnColor);
             if (isOneColorScoreZeroed() || isBoardFull()) {
                 showWinner();
             }
@@ -93,6 +94,7 @@ function initGame() {
     setSpot(BOARD_SIZE/2-1, BOARD_SIZE/2, BLACK);
     setSpot(BOARD_SIZE/2, BOARD_SIZE/2-1, BLACK);
     setSpot(BOARD_SIZE/2, BOARD_SIZE/2, WHITE);
+    markMove(WHITE);
 }
 
 function setTurn(color) {
@@ -131,6 +133,20 @@ function makeMove(i, j, color) {
     return false;
 }
 
+function markMove(color) {
+    for (let i = 0; i < BOARD_SIZE; i++) {
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            if (isSpotColor(i, j, BLANK)) {
+                if (getCellsToChangeByMove(i, j, color).length > 0) {
+                    cells[i][j].elem.className = "clickable_" + color;
+                } else if (cells[i][j].elem.className.startsWith("clickable_")) {
+                    cells[i][j].elem.className = '';
+                }
+            }
+        }
+    }
+}
+
 function setSpot(i, j, color) {
     updateScore(cells[i][j].value, color);
     cells[i][j].elem.innerHTML = "<span id=\"" + color + "\" class=\"color_" + color + "\">";
@@ -145,7 +161,7 @@ function isSpotColor(i, j, color) {
 }
 
 function getCellsToChangeByMove(i, j, color) {
-    cellsToChange = [];
+    let cellsToChange = [];
     for (diri=-1; diri<=1; diri++) {
         nexti = i + diri;
         for (dirj=-1; dirj<=1; dirj++) {
